@@ -3,6 +3,7 @@ package com.jpas.ebiblioteka.service.user;
 import com.jpas.ebiblioteka.config.SecretKeyGenerator;
 import com.jpas.ebiblioteka.entity.User;
 import com.jpas.ebiblioteka.entity.UserContact;
+import com.jpas.ebiblioteka.entity.request.UserData;
 import com.jpas.ebiblioteka.repository.user.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -23,6 +24,26 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User getUserById(Integer id) {
         return userRepository.getUserById(id);
+    }
+
+    @Override
+    @Transactional
+    public UserData getUserData(Integer id) {
+        User user = userRepository.getUserById(id);
+        if(user != null) {
+            UserContact userContact = userRepository.getUserContact(user);
+            UserData userData = new UserData(user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    null,
+                    userContact.getAddress(),
+                    userContact.getCity(),
+                    userContact.getZipCode(),
+                    userContact.getPhoneNumber());
+
+            return userData;
+        }
+        return null;
     }
 
     @Override

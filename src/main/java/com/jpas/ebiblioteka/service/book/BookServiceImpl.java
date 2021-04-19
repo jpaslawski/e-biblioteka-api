@@ -3,6 +3,7 @@ package com.jpas.ebiblioteka.service.book;
 import com.jpas.ebiblioteka.entity.Book;
 import com.jpas.ebiblioteka.entity.BookCategory;
 import com.jpas.ebiblioteka.entity.request.BookData;
+import com.jpas.ebiblioteka.entity.response.BookResponse;
 import com.jpas.ebiblioteka.repository.book.BookRepository;
 import com.jpas.ebiblioteka.service.reservation.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,11 +42,18 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Book getBookById(Integer bookId) {
+        return bookRepository.getBookById(bookId);
+    }
+
+    @Override
+    @Transactional
+    public BookResponse getBook(Integer bookId) {
         Book book = bookRepository.getBookById(bookId);
-        /*if(book != null) {
-            book.setQuantity(reservationService.getReservationCountForBook(bookId));
-        }*/
-        return book;
+        if(book != null) {
+            return new BookResponse(book, book.getQuantity() - reservationService.getReservationCountForBook(bookId));
+        }
+
+        return null;
     }
 
     @Override
@@ -64,7 +72,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Book updateBook(BookData bookData, Integer bookId) {
-        Book book  = getBookById(bookId);
+        Book book  = bookRepository.getBookById(bookId);
         if(book != null) {
             book.setName(bookData.getName());
             book.setAuthor(bookData.getAuthor());

@@ -3,7 +3,7 @@ package com.jpas.ebiblioteka.controller;
 import com.jpas.ebiblioteka.config.SecretKeyGenerator;
 import com.jpas.ebiblioteka.entity.User;
 import com.jpas.ebiblioteka.entity.UserContact;
-import com.jpas.ebiblioteka.entity.request.SignUpFormData;
+import com.jpas.ebiblioteka.entity.request.UserData;
 import com.jpas.ebiblioteka.entity.request.UserCredentials;
 import com.jpas.ebiblioteka.service.user.UserService;
 import io.jsonwebtoken.Jwts;
@@ -24,6 +24,18 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping("/admin/users/{userId}")
+    public ResponseEntity<?> getUserProfile(@PathVariable("userId") Integer userId) {
+        UserData userData = userService.getUserData(userId);
+        if(userData != null) {
+            return ResponseEntity.ok(userData);
+        }
+
+        JSONObject response = new JSONObject();
+        response.put("message", "Nie znaleziono użytkownika!");
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
 
     @GetMapping("/users/profile")
     public ResponseEntity<?> getUserProfile(@RequestHeader("Authorization") String header) {
@@ -50,7 +62,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> saveUser(@RequestBody SignUpFormData formData) {
+    public ResponseEntity<?> saveUser(@RequestBody UserData formData) {
         User user = new User(
                 formData.getFirstName(),
                 formData.getLastName(),

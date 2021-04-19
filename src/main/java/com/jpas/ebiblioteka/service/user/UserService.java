@@ -2,10 +2,13 @@ package com.jpas.ebiblioteka.service.user;
 
 import com.jpas.ebiblioteka.entity.User;
 import com.jpas.ebiblioteka.entity.UserContact;
+import com.jpas.ebiblioteka.entity.request.UserData;
 
 public interface UserService {
 
     User getUserById(Integer id);
+
+    UserData getUserData(Integer id);
 
     User getUserByEmail(String email);
 

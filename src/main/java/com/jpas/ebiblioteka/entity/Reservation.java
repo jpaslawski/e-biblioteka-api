@@ -24,13 +24,12 @@ public class Reservation {
     @Column(name = "reservation_status")
     private ReservationStatus status;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="reservation_user")
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="reservation_book")
+    @JoinColumn(name="reservation_book", referencedColumnName = "book_id")
     private Book book;
 
     public Reservation() {

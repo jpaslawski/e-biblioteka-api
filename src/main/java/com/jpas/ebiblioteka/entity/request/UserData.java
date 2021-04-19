@@ -1,6 +1,6 @@
 package com.jpas.ebiblioteka.entity.request;
 
-public class SignUpFormData {
+public class UserData {
     private String firstName;
 
     private String lastName;
@@ -15,11 +15,20 @@ public class SignUpFormData {
 
     private String zipCode;
 
-    private String country;
-
     private Long phoneNumber;
 
-    public SignUpFormData() {}
+    public UserData() {}
+
+    public UserData(String firstName, String lastName, String email, String password, String address, String city, String zipCode, Long phoneNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+        this.city = city;
+        this.zipCode = zipCode;
+        this.phoneNumber = phoneNumber;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -75,14 +84,6 @@ public class SignUpFormData {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
     }
 
     public Long getPhoneNumber() {

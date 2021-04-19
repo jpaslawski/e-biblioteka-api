@@ -62,9 +62,10 @@ public class ReservationServiceImpl implements ReservationService {
 
         // Check if this user hasn't already reserved the book
         List<Reservation> reservations = reservationRepository.getUserReservations(user);
-        if(user != null && book != null && book.getQuantity() > reservationRepository.getReservationCountForBook(book)) {
+        System.out.println("Quantity: " + book.getQuantity() + " Count: " + reservationRepository.getReservationCountForBook(book));
+        if(user != null && book != null && (book.getQuantity() - reservationRepository.getReservationCountForBook(book) > 0)) {
             for(Reservation reservation : reservations) {
-                if(reservation.getBook().getId().equals(bookId)) {
+                if(reservation.getBook().getId().equals(bookId) && !reservation.getStatus().equals(Reservation.ReservationStatus.RETURNED)) {
                     throw new Exception("You already reserved this book!");
                 }
             }

@@ -36,7 +36,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     public Integer getReservationCountForBook(Book book) {
         Session session = sessionFactory.getCurrentSession();
         Query<Reservation> query =
-                session.createQuery("FROM Reservation WHERE book=:book AND status = 0 OR status = 1", Reservation.class);
+                session.createQuery("FROM Reservation WHERE book=:book AND (status = 0 OR status = 1)", Reservation.class);
         query.setParameter("book", book);
 
         return query.getResultList().size();

@@ -1,5 +1,6 @@
 package com.jpas.ebiblioteka.controller;
 
+import com.jpas.ebiblioteka.entity.response.BookResponse;
 import com.jpas.ebiblioteka.service.book.BookService;
 import com.jpas.ebiblioteka.entity.Book;
 import com.jpas.ebiblioteka.entity.BookCategory;
@@ -41,8 +42,8 @@ public class BookController {
     }
 
     @GetMapping("/books/{bookId}")
-    public ResponseEntity<Book> getBookById(@PathVariable("bookId") Integer bookId) {
-        Book book = bookService.getBookById(bookId);
+    public ResponseEntity<BookResponse> getBook(@PathVariable("bookId") Integer bookId) {
+        BookResponse book = bookService.getBook(bookId);
         if(book != null) {
             return  ResponseEntity.ok(book);
         }

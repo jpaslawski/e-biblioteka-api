@@ -1,5 +1,7 @@
 package com.jpas.ebiblioteka.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,6 +34,7 @@ public class Book {
             inverseJoinColumns = { @JoinColumn(name = "book_category_id") })
     private Set<BookCategory> categories = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy="book",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})
@@ -93,6 +96,14 @@ public class Book {
 
     public void setCategories(Set<BookCategory> categories) {
         this.categories = categories;
+    }
+
+    public Set<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(Set<Reservation> reservations) {
+        this.reservations = reservations;
     }
 
     public void addBookCategory(BookCategory category) {
