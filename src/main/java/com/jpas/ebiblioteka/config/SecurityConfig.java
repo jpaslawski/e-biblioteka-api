@@ -26,7 +26,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/register", "/api/authenticate", "/api/books/**", "/api/categories/**").permitAll()
-                .antMatchers("/api/admin/*").hasAnyRole("LIBRARIAN", "ADMIN")
+                .antMatchers("/api/library/*").hasAnyRole("LIBRARIAN", "ADMIN")
+                .antMatchers("/api/admin/*").hasAnyRole("ADMIN")
                 .antMatchers("/api/**").authenticated()
                 .and()
                 .addFilter(new JWTFilter(authenticationManager()));

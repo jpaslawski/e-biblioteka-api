@@ -4,6 +4,7 @@ import com.jpas.ebiblioteka.config.SecretKeyGenerator;
 import com.jpas.ebiblioteka.entity.User;
 import com.jpas.ebiblioteka.entity.UserContact;
 import com.jpas.ebiblioteka.entity.request.UserData;
+import com.jpas.ebiblioteka.entity.response.UserResponse;
 import com.jpas.ebiblioteka.repository.user.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -13,12 +14,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Override
+    @Transactional
+    public List<UserResponse> getUsers() {
+        List<User> usersQuery = userRepository.getUsers();
+        if(!usersQuery.isEmpty()) {
+            List<UserResponse> userResponseList = new ArrayList<>(usersQuery.size());
+            for(User user : usersQuery) {
+                UserResponse userResponse =
+                        new UserResponse(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getRole().name());
+                userResponseList.add(userResponse);
+            }
+            return userResponseList;
+        }
+
+        return null;
+    }
 
     @Override
     @Transactional
@@ -113,5 +133,24 @@ public class UserServiceImpl implements UserService {
             userContact.setId(0);
             userRepository.saveUserContact(userContact);
         }
+    }
+
+    @Override
+    @Transactional
+    public User updateUserRole(User user, String role) {
+        switch(role) {
+            case "ADMIN":
+                return null;
+
+            case "LIBRARIAN" :
+                user.setRole(User.UserRole.ROLE_LIBRARIAN);
+                break;
+
+            case "STUDENT" :
+                user.setRole(User.UserRole.ROLE_STUDENT);
+                break;
+        }
+        userRepository.updateUserAccount(user);
+        return user;
     }
 }

@@ -3,8 +3,13 @@ package com.jpas.ebiblioteka.service.user;
 import com.jpas.ebiblioteka.entity.User;
 import com.jpas.ebiblioteka.entity.UserContact;
 import com.jpas.ebiblioteka.entity.request.UserData;
+import com.jpas.ebiblioteka.entity.response.UserResponse;
+
+import java.util.List;
 
 public interface UserService {
+
+    List<UserResponse> getUsers();
 
     User getUserById(Integer id);
 
@@ -23,4 +28,6 @@ public interface UserService {
     void updateUserPassword(User user, String password);
 
     void updateUserContact(User user, UserContact userContact);
+
+    User updateUserRole(User user, String role);
 }

@@ -3,7 +3,11 @@ package com.jpas.ebiblioteka.repository.user;
 import com.jpas.ebiblioteka.entity.User;
 import com.jpas.ebiblioteka.entity.UserContact;
 
+import java.util.List;
+
 public interface UserRepository {
+
+    List<User> getUsers();
 
     User getUserById(Integer id);
 

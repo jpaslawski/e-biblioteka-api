@@ -17,7 +17,7 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
-    @GetMapping("/admin/reservations")
+    @GetMapping("/library/reservations")
     public ResponseEntity<List<Reservation>> getReservations() {
         List<Reservation> reservations = reservationService.getReservations();
         if(reservations != null) {
@@ -82,7 +82,7 @@ public class ReservationController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/admin/reservations/{reservationId}")
+    @DeleteMapping("/library/reservations/{reservationId}")
     public ResponseEntity<JSONObject> deleteReservation(@PathVariable("reservationId") Integer reservationId) {
         Boolean deleted = reservationService.deleteReservation(reservationId);
         JSONObject response = new JSONObject();

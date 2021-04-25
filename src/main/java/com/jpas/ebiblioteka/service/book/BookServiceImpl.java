@@ -71,11 +71,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book updateBook(BookData bookData, Integer bookId) {
+    public BookResponse updateBook(BookData bookData, Integer bookId) {
         Book book  = bookRepository.getBookById(bookId);
         if(book != null) {
             book.setName(bookData.getName());
             book.setAuthor(bookData.getAuthor());
+            book.setImage(bookData.getImage());
+            book.setQuantity(bookData.getQuantity());
             book.getCategories().clear();
 
             Set<BookCategory> bookCategorySet = new HashSet<>();
@@ -86,7 +88,7 @@ public class BookServiceImpl implements BookService {
             book.setCategories(bookCategorySet);
             bookRepository.updateBook(book);
 
-            return book;
+            return new BookResponse(book, book.getQuantity() - reservationService.getReservationCountForBook(bookId));
         }
         return null;
     }

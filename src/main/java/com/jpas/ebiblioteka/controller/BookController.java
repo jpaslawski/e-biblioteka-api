@@ -51,7 +51,7 @@ public class BookController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/admin/books")
+    @PostMapping("/library/books")
     public ResponseEntity<?> saveBook(@RequestBody BookData bookData) {
         Book book = new Book(
                 bookData.getName(),
@@ -62,9 +62,9 @@ public class BookController {
         return ResponseEntity.ok(book);
     }
 
-    @PutMapping("/admin/books/{bookId}")
+    @PutMapping("/library/books/{bookId}")
     public ResponseEntity<?> updateBook(@RequestBody BookData bookData, @PathVariable("bookId") Integer bookId) {
-        Book updatedBook = bookService.updateBook(bookData, bookId);
+        BookResponse updatedBook = bookService.updateBook(bookData, bookId);
         if(updatedBook != null) {
             return ResponseEntity.ok(updatedBook);
         }
@@ -72,7 +72,7 @@ public class BookController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/admin/books/{bookId}")
+    @DeleteMapping("/library/books/{bookId}")
     public ResponseEntity<JSONObject> deleteBook(@PathVariable("bookId") Integer bookId) {
         Boolean deleted = bookService.deleteBook(bookId);
         JSONObject response = new JSONObject();
@@ -94,13 +94,13 @@ public class BookController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/admin/categories")
+    @PostMapping("/library/categories")
     public ResponseEntity<?> saveCategory(@RequestBody BookCategory category) {
         bookService.saveCategory(category);
         return ResponseEntity.ok(category);
     }
 
-    @DeleteMapping("/admin/categories/{categoryId}")
+    @DeleteMapping("/library/categories/{categoryId}")
     public ResponseEntity<JSONObject> deleteCategory(@PathVariable("categoryId") Integer categoryId) {
         Boolean deleted = bookService.deleteCategory(categoryId);
         JSONObject response = new JSONObject();

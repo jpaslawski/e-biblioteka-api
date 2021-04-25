@@ -20,7 +20,7 @@ public interface BookService {
 
     void saveBook(Book book, Set<String> categories);
 
-    Book updateBook(BookData bookData, Integer bookId);
+    BookResponse updateBook(BookData bookData, Integer bookId);
 
     Boolean deleteBook(Integer bookId);
 

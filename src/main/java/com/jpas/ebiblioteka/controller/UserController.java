@@ -5,6 +5,7 @@ import com.jpas.ebiblioteka.entity.User;
 import com.jpas.ebiblioteka.entity.UserContact;
 import com.jpas.ebiblioteka.entity.request.UserData;
 import com.jpas.ebiblioteka.entity.request.UserCredentials;
+import com.jpas.ebiblioteka.entity.response.UserResponse;
 import com.jpas.ebiblioteka.service.user.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -25,7 +27,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/admin/users/{userId}")
+    @GetMapping("/library/users/{userId}")
     public ResponseEntity<?> getUserProfile(@PathVariable("userId") Integer userId) {
         UserData userData = userService.getUserData(userId);
         if(userData != null) {
@@ -34,6 +36,18 @@ public class UserController {
 
         JSONObject response = new JSONObject();
         response.put("message", "Nie znaleziono użytkownika!");
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/admin/users")
+    public ResponseEntity<?> getUsers() {
+        List<UserResponse> users = userService.getUsers();
+        if(!users.isEmpty()) {
+            return ResponseEntity.ok(users);
+        }
+
+        JSONObject response = new JSONObject();
+        response.put("message", "Nie znaleziono żadnych użytkowników!");
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
@@ -125,6 +139,24 @@ public class UserController {
 
         JSONObject response = new JSONObject();
         response.put("message", "Nie znaleziono użytkownika!");
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping("/admin/users/{userId}")
+    public ResponseEntity<?> updateUserRole(@PathVariable("userId") Integer userId,  @RequestParam("newRole") String role) {
+        User user = userService.getUserById(userId);
+        JSONObject response = new JSONObject();
+
+        if(user != null) {
+            User updatedUser = userService.updateUserRole(user, role);
+            if(updatedUser != null) {
+                return ResponseEntity.ok(user);
+            }
+            response.put("message", "Nie można wykonać tego żądania!");
+        } else {
+            response.put("message", "Nie znaleziono użytkownika!");
+        }
+
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
