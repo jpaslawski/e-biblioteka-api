@@ -4,6 +4,7 @@ import com.jpas.ebiblioteka.entity.Book;
 import com.jpas.ebiblioteka.entity.BookCategory;
 import com.jpas.ebiblioteka.entity.request.BookData;
 import com.jpas.ebiblioteka.entity.response.BookResponse;
+import com.jpas.ebiblioteka.entity.response.UserNotification;
 
 import java.util.List;
 import java.util.Set;
@@ -17,6 +18,8 @@ public interface BookService {
     BookResponse getBook(Integer bookId);
 
     Book getBookById(Integer bookId);
+
+    List<UserNotification> getUserNotifications(String header);
 
     void saveBook(Book book, Set<String> categories);
 

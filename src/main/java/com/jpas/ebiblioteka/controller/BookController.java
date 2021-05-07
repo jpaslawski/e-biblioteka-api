@@ -1,6 +1,7 @@
 package com.jpas.ebiblioteka.controller;
 
 import com.jpas.ebiblioteka.entity.response.BookResponse;
+import com.jpas.ebiblioteka.entity.response.UserNotification;
 import com.jpas.ebiblioteka.service.book.BookService;
 import com.jpas.ebiblioteka.entity.Book;
 import com.jpas.ebiblioteka.entity.BookCategory;
@@ -24,31 +25,37 @@ public class BookController {
     @GetMapping("/books")
     public ResponseEntity<List<Book>> getBooks() {
         List<Book> books = bookService.getBooks();
-        if(!books.isEmpty()) {
-            return ResponseEntity.ok(books);
+        if(books.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(books);
     }
 
     @GetMapping("/books/filter")
     public ResponseEntity<List<Book>> getBooksByCategory(@RequestParam(value="category") String category) {
         List<Book> books = bookService.getBooksByCategory(category);
-        if(!books.isEmpty()) {
-            return ResponseEntity.ok(books);
+        if(books.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(books);
     }
 
     @GetMapping("/books/{bookId}")
     public ResponseEntity<BookResponse> getBook(@PathVariable("bookId") Integer bookId) {
         BookResponse book = bookService.getBook(bookId);
-        if(book != null) {
-            return  ResponseEntity.ok(book);
+        if(book == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        return  ResponseEntity.ok(book);
+    }
 
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @GetMapping("/books/notifications")
+    public ResponseEntity<?> getUserNotifications(@RequestHeader("Authorization") String header) {
+        List<UserNotification> notifications = bookService.getUserNotifications(header);
+        if(notifications.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.ok(notifications);
     }
 
     @PostMapping("/library/books")
@@ -65,11 +72,10 @@ public class BookController {
     @PutMapping("/library/books/{bookId}")
     public ResponseEntity<?> updateBook(@RequestBody BookData bookData, @PathVariable("bookId") Integer bookId) {
         BookResponse updatedBook = bookService.updateBook(bookData, bookId);
-        if(updatedBook != null) {
-            return ResponseEntity.ok(updatedBook);
+        if(updatedBook == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return ResponseEntity.ok(updatedBook);
     }
 
     @DeleteMapping("/library/books/{bookId}")
@@ -86,12 +92,11 @@ public class BookController {
 
     @GetMapping("/categories")
     public ResponseEntity<?> getBookCategories() {
-        List<BookCategory> bookGenres = bookService.getCategories();
-        if(bookGenres != null) {
-            return ResponseEntity.ok(bookGenres);
+        List<BookCategory> bookCategories = bookService.getCategories();
+        if(bookCategories.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(bookCategories);
     }
 
     @PostMapping("/library/categories")

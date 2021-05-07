@@ -2,17 +2,19 @@ package com.jpas.ebiblioteka.service.book;
 
 import com.jpas.ebiblioteka.entity.Book;
 import com.jpas.ebiblioteka.entity.BookCategory;
+import com.jpas.ebiblioteka.entity.Reservation;
+import com.jpas.ebiblioteka.entity.User;
 import com.jpas.ebiblioteka.entity.request.BookData;
 import com.jpas.ebiblioteka.entity.response.BookResponse;
+import com.jpas.ebiblioteka.entity.response.UserNotification;
 import com.jpas.ebiblioteka.repository.book.BookRepository;
 import com.jpas.ebiblioteka.service.reservation.ReservationService;
+import com.jpas.ebiblioteka.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -36,7 +38,7 @@ public class BookServiceImpl implements BookService {
         if(bookCategory != null) {
             return bookRepository.getBooksByCategory(bookCategory);
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -52,8 +54,34 @@ public class BookServiceImpl implements BookService {
         if(book != null) {
             return new BookResponse(book, book.getQuantity() - reservationService.getReservationCountForBook(bookId));
         }
-
         return null;
+    }
+
+    @Override
+    @Transactional
+    public List<UserNotification> getUserNotifications(String header) {
+        List<Reservation> reservations = reservationService.getUserReservations(header);
+
+        if(!reservations.isEmpty()) {
+            Long currentTime = new Date().getTime();
+            List<UserNotification> notifications = new ArrayList<>();
+
+            for(Reservation reservation : reservations) {
+                long dayDiff = (currentTime - reservation.getDate()) / 86400000;
+                if(reservation.getStatus() == Reservation.ReservationStatus.RESERVED && dayDiff > 2) {
+                    reservationService.updateReservation(header, reservation.getId(), "RETURNED");
+                    notifications.add(new UserNotification(reservation.getBook().getName(), "RETURNED", 0L));
+                } else if(reservation.getStatus() == Reservation.ReservationStatus.COLLECTED ) {
+                    if(dayDiff > 30) {
+                        notifications.add(new UserNotification(reservation.getBook().getName(), "COLLECTED", 0L));
+                    } else if(dayDiff > 23) {
+                        notifications.add(new UserNotification(reservation.getBook().getName(), "COLLECTED", 30 - dayDiff));
+                    }
+                }
+            }
+            return notifications;
+        }
+        return new ArrayList<>();
     }
 
     @Override

@@ -1,3 +1,70 @@
+DROP TABLE IF EXISTS book__book_category;
+DROP TABLE IF EXISTS book_category;
+DROP TABLE IF EXISTS reservation;
+DROP TABLE IF EXISTS book;
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS user_contact;
+
+create table book
+(
+    book_id       int auto_increment
+        primary key,
+    book_name     varchar(500)  not null,
+    book_author   varchar(100)  not null,
+    book_quantity int default 0 not null,
+    book_image    varchar(200)  null
+);
+
+create table book__book_category
+(
+    book_id          int not null,
+    book_category_id int not null,
+    primary key (book_id, book_category_id)
+);
+
+create table book_category
+(
+    category_id   int auto_increment
+        primary key,
+    category_name varchar(30) not null
+);
+
+create table user
+(
+    user_id        int auto_increment
+        primary key,
+    user_firstName varchar(30)   not null,
+    user_lastName  varchar(30)   not null,
+    user_email     varchar(40)   not null,
+    user_password  varchar(16)   not null,
+    user_role      int default 0 null
+);
+
+create table reservation
+(
+    reservation_id     int auto_increment
+        primary key,
+    reservation_date   date          not null,
+    reservation_status int default 0 not null,
+    reservation_book   int           not null,
+    reservation_user   int           not null,
+    constraint reservation_book_fk
+        foreign key (reservation_book) references book (book_id),
+    constraint reservation_user_fk
+        foreign key (reservation_user) references user (user_id)
+);
+
+create table user_contact
+(
+    contact_id          int auto_increment
+        primary key,
+    contact_address     varchar(40) not null,
+    contact_city        varchar(30) not null,
+    contact_zipCode     varchar(6)  not null,
+    contact_phoneNumber mediumtext  not null,
+    contact_owner       int         not null
+);
+
 INSERT INTO app_db.book (book_id, book_name, book_author, book_quantity, book_image) VALUES (1, 'Matematyka dyskretna', 'Kenneth A. Ross, Charles R. B. Wright', 3, 'https://media.merlin.pl/media/300x452/000/003/779/56ba5df566b01.jpg');
 INSERT INTO app_db.book (book_id, book_name, book_author, book_quantity, book_image) VALUES (2, 'Spring w akcji', 'Craig Walls', 2, 'https://static01.helion.com.pl/global/okladki/326x466/sprwa4.jpg');
 INSERT INTO app_db.book (book_id, book_name, book_author, book_quantity, book_image) VALUES (3, 'Spring w praktyce', 'Willie Wheeler, Joshua White', 2, 'https://static01.helion.com.pl/global/okladki/326x466/spripr.jpg');

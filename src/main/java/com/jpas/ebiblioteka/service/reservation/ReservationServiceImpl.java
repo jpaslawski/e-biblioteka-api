@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class ReservationServiceImpl implements ReservationService {
         if(user != null) {
             return reservationRepository.getUserReservations(user);
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -88,6 +89,7 @@ public class ReservationServiceImpl implements ReservationService {
             switch (status) {
                 case "COLLECTED":
                     reservation.setStatus(Reservation.ReservationStatus.COLLECTED);
+                    reservation.setDate(new Date().getTime());
                     break;
                 case "RETURNED":
                     reservation.setStatus(Reservation.ReservationStatus.RETURNED);

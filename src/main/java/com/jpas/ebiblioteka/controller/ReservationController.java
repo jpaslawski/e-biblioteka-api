@@ -20,11 +20,10 @@ public class ReservationController {
     @GetMapping("/library/reservations")
     public ResponseEntity<List<Reservation>> getReservations() {
         List<Reservation> reservations = reservationService.getReservations();
-        if(reservations != null) {
-            return ResponseEntity.ok(reservations);
+        if(reservations == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(reservations);
     }
 
     @GetMapping("/reservations")
@@ -33,18 +32,16 @@ public class ReservationController {
         if(reservations.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-
         return ResponseEntity.ok(reservations);
     }
 
     @GetMapping("/reservations/{reservationId}")
     public ResponseEntity<Reservation> getReservation(@PathVariable("reservationId") Integer reservationId) {
         Reservation reservation = reservationService.getReservation(reservationId);
-        if(reservation != null) {
-            return  ResponseEntity.ok(reservation);
+        if(reservation == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return  ResponseEntity.ok(reservation);
     }
 
     @PostMapping("/reservations/{bookId}")
