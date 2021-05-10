@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class ReservationServiceImpl implements ReservationService {
         if(user != null) {
             return reservationRepository.getUserReservations(user);
         }
-        return new ArrayList<>();
+        return Collections.emptyList();
     }
 
     @Override

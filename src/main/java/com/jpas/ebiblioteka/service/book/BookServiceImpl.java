@@ -38,7 +38,7 @@ public class BookServiceImpl implements BookService {
         if(bookCategory != null) {
             return bookRepository.getBooksByCategory(bookCategory);
         }
-        return new ArrayList<>();
+        return Collections.emptyList();
     }
 
     @Override
@@ -81,7 +81,7 @@ public class BookServiceImpl implements BookService {
             }
             return notifications;
         }
-        return new ArrayList<>();
+        return Collections.emptyList();
     }
 
     @Override
